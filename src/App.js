@@ -1,9 +1,10 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { Normalize, Grid, Typography } from '@smooth-ui/core-sc';
+import { Row, Col, Normalize, Grid, Typography } from '@smooth-ui/core-sc';
 
 import SearchInput from './components/SearchInput';
 import { Movies } from './containers/MovieDb';
 import Catch from './components/Catch';
+import MovieCard from './components/MovieCard';
 
 function App() {
   const [query, setQuery] = useState('Lord of the ring');
@@ -28,15 +29,19 @@ function App() {
         <p>Search : {query}</p>
         <p>Results : </p>
         <Catch ref={catchRef}>
-          <Movies query={query}>
-            {movies => (
-              <ul>
-                {movies.map(({ id, title }) => (
-                  <li key={id}>{title}</li>
-                ))}
-              </ul>
-            )}
-          </Movies>
+          <Row>
+            <Movies query={query}>
+              {movies =>
+                movies
+                  .filter(movie => movie.backdrop_path)
+                  .map(movie => (
+                    <Col my={1} xs={12} md={6} key={movie.id}>
+                      <MovieCard movie={movie} />
+                    </Col>
+                  ))
+              }
+            </Movies>
+          </Row>
         </Catch>
       </Grid>
     </>
