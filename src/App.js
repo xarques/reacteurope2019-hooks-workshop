@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { Normalize, Grid, Typography } from '@smooth-ui/core-sc';
 
 import SearchInput from './components/SearchInput';
@@ -7,6 +7,11 @@ import Catch from './components/Catch';
 
 function App() {
   const [query, setQuery] = useState('Lord of the ring');
+  const catchRef = useRef();
+
+  useEffect(() => {
+    catchRef.current.retry();
+  }, [query]);
 
   return (
     <>
@@ -22,17 +27,15 @@ function App() {
         />
         <p>Search : {query}</p>
         <p>Results : </p>
-        <Catch>
-          <Movies>
-            {movies => {
-              return (
-                <ul>
-                  {movies.map(({ id, title }) => (
-                    <li key={id}>{title}</li>
-                  ))}
-                </ul>
-              );
-            }}
+        <Catch ref={catchRef}>
+          <Movies query={query}>
+            {movies => (
+              <ul>
+                {movies.map(({ id, title }) => (
+                  <li key={id}>{title}</li>
+                ))}
+              </ul>
+            )}
           </Movies>
         </Catch>
       </Grid>

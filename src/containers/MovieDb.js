@@ -1,13 +1,32 @@
-import { useState, useEffect } from 'react';
+import { useEffect, useReducer } from 'react';
 import axios from 'axios';
 import debounce from 'es6-promise-debounce';
 
 const debounceAxiosGet = debounce(axios.get, 1000);
 
+const initialState = { results: [], error: null };
+
+const reducer = (state, action) => {
+  switch (action.type) {
+    case 'FETCH_MOVIES':
+      return { results: action.payload, error: null };
+    case 'EMPTY_MOVIES':
+      return { results: [], error: null };
+    case 'ERROR':
+      return { results: [], error: action.payload };
+    default:
+      return state;
+  }
+};
+
 const useMovieSearch = query => {
-  const [movies, setMovies] = useState({ results: [], error: null });
+  const [movies, dispatch] = useReducer(reducer, initialState);
 
   useEffect(() => {
+    if (!query) {
+      dispatch({ type: 'EMPTY_MOVIES' });
+      return;
+    }
     (async function() {
       try {
         const res = await debounceAxiosGet(
@@ -19,9 +38,9 @@ const useMovieSearch = query => {
             }
           }
         );
-        setMovies({ results: res.data.results, error: null });
+        dispatch({ type: 'FETCH_MOVIES', payload: res.data.results });
       } catch (error) {
-        setMovies({ results: [], error });
+        dispatch({ type: 'ERROR', payload: error });
       }
     })();
   }, [query]);

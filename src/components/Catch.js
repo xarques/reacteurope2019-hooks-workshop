@@ -6,6 +6,11 @@ export default class Catch extends Component {
   static getDerivedStateFromError(error) {
     return { hasError: true };
   }
+
+  retry() {
+    this.setState({ hasError: false });
+  }
+
   render() {
     if (this.state.hasError) {
       return <h1>Something went wrong</h1>;
