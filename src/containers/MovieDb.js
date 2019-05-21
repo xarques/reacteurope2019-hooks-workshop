@@ -5,22 +5,30 @@ import debounce from 'es6-promise-debounce';
 const debounceAxiosGet = debounce(axios.get, 1000);
 
 export const useMovieSearch = query => {
-  const [movies, setMovies] = useState([]);
+  const [movies, setMovies] = useState({ results: [], error: null });
 
   useEffect(() => {
     (async function() {
-      const res = await debounceAxiosGet(
-        'https://api.themoviedb.org/3/search/movie',
-        {
-          params: {
-            api_key: 'a0acf48d85383e412e1e53f18b225c6a',
-            query
+      try {
+        const res = await debounceAxiosGet(
+          'https://api.themoviedb.org/3/search/movie',
+          {
+            params: {
+              api_key: 'a0acf48d85383e412e1e53f18b225c6a',
+              query
+            }
           }
-        }
-      );
-      setMovies(res.data.results);
+        );
+        setMovies({ results: res.data.results, error: null });
+      } catch (error) {
+        setMovies({ results: [], error });
+      }
     })();
   }, [query]);
 
-  return movies;
+  if (movies.error) {
+    throw movies.error;
+  }
+
+  return movies.results;
 };
