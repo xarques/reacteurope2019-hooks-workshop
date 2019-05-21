@@ -1,10 +1,30 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Normalize, Grid, Typography } from '@smooth-ui/core-sc';
+import axios from 'axios';
+import debounce from 'es6-promise-debounce';
 
 import SearchInput from './components/SearchInput';
 
+const debounceAxiosGet = debounce(axios.get, 1000);
+
 function App() {
-  const [value, setValue] = useState('');
+  const [query, setQuery] = useState('Lord of the ring');
+  const [movies, setMovies] = useState([]);
+
+  useEffect(() => {
+    (async function() {
+      const res = await debounceAxiosGet(
+        'https://api.themoviedb.org/3/search/movie',
+        {
+          params: {
+            api_key: 'a0acf48d85383e412e1e53f18b225c6a',
+            query
+          }
+        }
+      );
+      setMovies(res.data.results);
+    })();
+  }, [movies, query]);
 
   return (
     <>
@@ -15,10 +35,16 @@ function App() {
         {/* a "Typography" composant with ready to use variants */}
         <Typography variant="display-1">Smooth Movie</Typography>
         <SearchInput
-          value={value}
-          onChange={event => setValue(event.target.value)}
+          value={query}
+          onChange={event => setQuery(event.target.value)}
         />
-        <p>Search : {value}</p>
+        <p>Search : {query}</p>
+        <p>Results : </p>
+        <ul>
+          {movies.map(({ id, title }) => (
+            <li key={id}>{title}</li>
+          ))}
+        </ul>
       </Grid>
     </>
   );
