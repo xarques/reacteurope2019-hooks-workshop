@@ -5,11 +5,14 @@ import SearchInput from './components/SearchInput';
 import { Movies } from './containers/MovieDb';
 import Catch from './components/Catch';
 import MovieCard from './components/MovieCard';
+import { T, useI18n } from './components/I18n';
 
 function App() {
   const [query, setQuery] = useState('Lord of the ring');
   const catchRef = useRef();
-
+  const { setLocale, locale } = useI18n();
+  // Si on est en français, on voudra passer en anglais et inversement
+  const otherLocale = locale === 'fr' ? 'en' : 'fr';
   useEffect(() => {
     catchRef.current.retry();
   }, [query]);
@@ -20,8 +23,13 @@ function App() {
       <Grid py={200}>
         {/* Normalize the CSS output between the different browsers */}
         <Normalize />
+        <button my={1} onClick={() => setLocale(otherLocale)}>
+          <T id={otherLocale} />
+        </button>
         {/* a "Typography" composant with ready to use variants */}
-        <Typography variant="display-1">Smooth Movie</Typography>
+        <Typography variant="display-1">
+          <T id="title" />
+        </Typography>
         <SearchInput
           value={query}
           onChange={event => setQuery(event.target.value)}
