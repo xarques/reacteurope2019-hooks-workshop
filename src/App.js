@@ -1,31 +1,13 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { Normalize, Grid, Typography } from '@smooth-ui/core-sc';
-import axios from 'axios';
-import debounce from 'es6-promise-debounce';
 
 import SearchInput from './components/SearchInput';
-
-const debounceAxiosGet = debounce(axios.get, 1000);
+import { useMovieSearch } from './containers/MovieDb';
 
 function App() {
   const [query, setQuery] = useState('Lord of the ring');
-  const [movies, setMovies] = useState([]);
 
-  useEffect(() => {
-    (async function() {
-      const res = await debounceAxiosGet(
-        'https://api.themoviedb.org/3/search/movie',
-        {
-          params: {
-            api_key: 'a0acf48d85383e412e1e53f18b225c6a',
-            query
-          }
-        }
-      );
-      setMovies(res.data.results);
-    })();
-  }, [movies, query]);
-
+  const movies = useMovieSearch(query);
   return (
     <>
       {/* The "Grid" component centers the child in the page, "py" means "padding-top" and "padding-bottom" */}
