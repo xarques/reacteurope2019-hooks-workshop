@@ -1,25 +1,26 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import React, { useState } from 'react';
+import { Normalize, Grid, Typography } from '@smooth-ui/core-sc';
+
+import SearchInput from './components/SearchInput';
 
 function App() {
+  const [value, setValue] = useState('');
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <>
+      {/* The "Grid" component centers the child in the page, "py" means "padding-top" and "padding-bottom" */}
+      <Grid py={200}>
+        {/* Normalize the CSS output between the different browsers */}
+        <Normalize />
+        {/* a "Typography" composant with ready to use variants */}
+        <Typography variant="display-1">Smooth Movie</Typography>
+        <SearchInput
+          value={value}
+          onChange={event => setValue(event.target.value)}
+        />
+        <p>Search : {value}</p>
+      </Grid>
+    </>
   );
 }
 
