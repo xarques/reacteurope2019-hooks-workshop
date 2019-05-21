@@ -2,12 +2,12 @@ import React, { useState } from 'react';
 import { Normalize, Grid, Typography } from '@smooth-ui/core-sc';
 
 import SearchInput from './components/SearchInput';
-import { useMovieSearch } from './containers/MovieDb';
+import { Movies } from './containers/MovieDb';
+import Catch from './components/Catch';
 
 function App() {
   const [query, setQuery] = useState('Lord of the ring');
 
-  const movies = useMovieSearch(query);
   return (
     <>
       {/* The "Grid" component centers the child in the page, "py" means "padding-top" and "padding-bottom" */}
@@ -22,11 +22,19 @@ function App() {
         />
         <p>Search : {query}</p>
         <p>Results : </p>
-        <ul>
-          {movies.map(({ id, title }) => (
-            <li key={id}>{title}</li>
-          ))}
-        </ul>
+        <Catch>
+          <Movies>
+            {movies => {
+              return (
+                <ul>
+                  {movies.map(({ id, title }) => (
+                    <li key={id}>{title}</li>
+                  ))}
+                </ul>
+              );
+            }}
+          </Movies>
+        </Catch>
       </Grid>
     </>
   );

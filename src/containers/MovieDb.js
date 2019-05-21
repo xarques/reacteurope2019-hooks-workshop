@@ -4,7 +4,7 @@ import debounce from 'es6-promise-debounce';
 
 const debounceAxiosGet = debounce(axios.get, 1000);
 
-export const useMovieSearch = query => {
+const useMovieSearch = query => {
   const [movies, setMovies] = useState({ results: [], error: null });
 
   useEffect(() => {
@@ -31,4 +31,9 @@ export const useMovieSearch = query => {
   }
 
   return movies.results;
+};
+
+export const Movies = ({ query, children }) => {
+  const movies = useMovieSearch(query);
+  return children(movies);
 };
