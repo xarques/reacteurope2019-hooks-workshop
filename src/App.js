@@ -6,6 +6,7 @@ import { Movies } from './containers/MovieDb';
 import Catch from './components/Catch';
 import MovieCard from './components/MovieCard';
 import { T, useI18n } from './components/I18n';
+import { useShortcutEffect } from './components/Shortcut';
 
 function App() {
   const [query, setQuery] = useState('Lord of the ring');
@@ -18,6 +19,11 @@ function App() {
     catchRef.current.retry();
   }, [query]);
   useEffect(() => searchInputRef.current.focus(), [searchInputRef]);
+
+  // Réaction au raccourcis "alt+f"
+  useShortcutEffect('alt+f', () => {
+    searchInputRef.current.focus();
+  });
 
   return (
     <>
