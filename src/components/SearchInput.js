@@ -1,12 +1,16 @@
-import React, { useRef, useEffect } from 'react';
+import React, { useRef, forwardRef, useImperativeHandle } from 'react';
 import { Input } from '@smooth-ui/core-sc';
 
 import { useT } from './I18n';
 
-export default props => {
+export default forwardRef((props, ref) => {
   const inputRef = useRef();
 
-  useEffect(() => inputRef.current.focus(), []);
+  useImperativeHandle(ref, () => ({
+    focus: () => {
+      inputRef.current.focus();
+    }
+  }));
 
   return (
     <Input
@@ -17,4 +21,4 @@ export default props => {
       {...props}
     />
   );
-};
+});

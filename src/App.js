@@ -10,12 +10,14 @@ import { T, useI18n } from './components/I18n';
 function App() {
   const [query, setQuery] = useState('Lord of the ring');
   const catchRef = useRef();
+  const searchInputRef = useRef();
   const { setLocale, locale } = useI18n();
   // Si on est en français, on voudra passer en anglais et inversement
   const otherLocale = locale === 'fr' ? 'en' : 'fr';
   useEffect(() => {
     catchRef.current.retry();
   }, [query]);
+  useEffect(() => searchInputRef.current.focus(), [searchInputRef]);
 
   return (
     <>
@@ -31,6 +33,7 @@ function App() {
           <T id="title" />
         </Typography>
         <SearchInput
+          ref={searchInputRef}
           value={query}
           onChange={event => setQuery(event.target.value)}
         />
