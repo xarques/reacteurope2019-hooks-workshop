@@ -7,12 +7,17 @@ import Catch from './components/Catch';
 import MovieCard from './components/MovieCard';
 import { T, useI18n } from './components/I18n';
 import { useShortcutEffect } from './components/Shortcut';
+import Portal from './components/Portal';
 
 function App() {
   const [query, setQuery] = useState('Lord of the ring');
   const catchRef = useRef();
   const searchInputRef = useRef();
   const { setLocale, locale } = useI18n();
+  const container = useRef(null);
+
+  container.current = document.getElementById('modal');
+
   // Si on est en français, on voudra passer en anglais et inversement
   const otherLocale = locale === 'fr' ? 'en' : 'fr';
   useEffect(() => {
@@ -38,6 +43,9 @@ function App() {
         <Typography variant="display-1">
           <T id="title" />
         </Typography>
+        <Portal container={container.current}>
+          <Typography>But I actually render here!</Typography>
+        </Portal>
         <SearchInput
           ref={searchInputRef}
           value={query}
